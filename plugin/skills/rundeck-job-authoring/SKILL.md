@@ -11,9 +11,6 @@ description: >-
 
 # Rundeck job authoring
 
-(Authoring on the Ansible/AWX backend is covered by the separate
-`awx-job-authoring` skill — this skill is about Rundeck.)
-
 Rundeck holds this organisation's codified diagnostic runbooks. During a PIR,
 the most valuable follow-up is often "make the check we did by hand into a
 runbook" — so the next investigation gets it in one call. This skill covers

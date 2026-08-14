@@ -19,9 +19,6 @@ Rundeck holds this organisation's codified diagnostic runbooks. They are
 read-only checks — they inspect system state, never change it — so running
 them is always safe. Access is via the **Rundeck MCP connector**.
 
-(Ansible/AWX runbooks are covered by the separate `awx-diagnostics` skill —
-this skill is about Rundeck.)
-
 **Approved runbooks live in the `Diagnostics` project** (group `diagnostics`,
 tagged `diagnostic`). Default to it for every lookup and run; only use another
 project (e.g. `diagnostics-demo`) when the user names one explicitly.

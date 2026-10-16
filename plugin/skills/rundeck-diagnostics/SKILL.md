@@ -65,9 +65,16 @@ forming hypotheses — it checks the public status of major SaaS vendors and
 the Paylinity payment provider in ~5 seconds. An active vendor outage
 reframes the whole investigation; ruling one out is the cheapest evidence you
 can gather. Cite its summary either way ("no active vendor issues" is a
-finding), and re-run it with `vendor=<name>` later if a specific dependency
-comes under suspicion. A vendor reported degraded is a lead to test against
-the incident's symptoms, not a root cause by itself.
+finding). A vendor reported degraded is a lead to test against the incident's
+symptoms, not a root cause by itself.
+
+The `vendor=all` run already covers every vendor, including any the alert
+names, so don't follow it with a single-vendor run during the opener. Re-run
+with one vendor only later, when a new question needs a fresh reading the
+first run can't answer — for example, checking whether a vendor degraded in
+the first run has since recovered. The `vendor` option takes exact lowercase
+values: `all`, `paylinity`, `slack`, `zoom`, `github`, `jira`,
+`google-workspace`, `cloudflare`, `datadog`, `stripe`, `twilio`, `openai`.
 
 **Where it is not**, check `list_executions` for a recent `vendor-status-check`
 run and cite that if one covers the incident window. Otherwise record vendor

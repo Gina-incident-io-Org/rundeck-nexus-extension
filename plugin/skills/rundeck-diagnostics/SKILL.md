@@ -12,6 +12,8 @@ description: >-
   check is a once-per-incident opener rather than a step to repeat for every
   later subtask. Approved runbooks live in the diagnostics-demo project (the
   default); users can point at other projects explicitly.
+metadata:
+  incident-io-plugin-version: "1.20261024.735"
 ---
 
 # Rundeck diagnostics
@@ -61,8 +63,10 @@ are never bound in an investigation, and may be switched off entirely.
 
 **Where `run_diagnostic` is bound**, run
 `run_diagnostic(job="vendor-status-check", options={"vendor": "all"})` before
-forming hypotheses — it checks the public status of major SaaS vendors and
-the Paylinity payment provider in ~5 seconds. An active vendor outage
+forming hypotheses. This call is complete as written: run it directly, without
+`list_jobs` or `get_job` first, and don't skip it because a lookup failed. It
+checks the public status of major SaaS vendors and the Paylinity payment
+provider in ~5 seconds. An active vendor outage
 reframes the whole investigation; ruling one out is the cheapest evidence you
 can gather. Cite its summary either way ("no active vendor issues" is a
 finding). A vendor reported degraded is a lead to test against the incident's
@@ -96,11 +100,22 @@ Prefer native telemetry sources for metrics/log *history*; use Rundeck for
 
 ## How to run a diagnostic
 
-1. **`list_jobs(query={project: "diagnostics-demo"})`** — see what's available
+When you already know the job's name and its options — `vendor-status-check`
+with `vendor=all` in the opener, or a job and options a person named — go
+straight to step 3. Discovery is for finding a job, not a gate before running one.
+
+1. **`list_jobs(query={project: "diagnostics-demo"})`** — for a job you don't
+   know yet, see what's available
    (only look elsewhere if the user named a different project; `list_projects()`
    shows what exists). Job descriptions state when each check is useful and
-   what it returns. Don't guess job ids.
-2. **Map incident context to options.** Check the option schema with
+   what it returns. Use only job ids and names you read in a successful
+   `list_jobs` result. If `list_jobs` fails or finds no matching job, the
+   lookup gave you nothing to continue from: don't assume what it would have
+   returned, don't call `get_job` with an id you didn't see there, and don't
+   run anything that depended on it. Report the check as unrun. (A job you
+   already know in full, like the opener above, needs no lookup.)
+2. **Map incident context to options.** For a job whose options you don't know,
+   check the option schema with
    **`get_job(job_id)`** — options use plain names (`service`, `target`,
    `window_minutes`), many with enforced allowed values. Take values from the
    alert payload, affected catalog entries, or earlier findings. If a required
